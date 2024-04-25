@@ -1,0 +1,72 @@
+Bootstrap: docker
+From: opensuse/leap:15.4 
+
+%environment
+    # Point to MPICH binaries, libraries man pages
+    export MPICH_DIR=/opt/mpich
+    export PATH="$MPICH_DIR/bin:$PATH"
+    export LD_LIBRARY_PATH="$MPICH_DIR/lib:$LD_LIBRARY_PATH"
+    export MANPATH=$MPICH_DIR/share/man:$MANPATH
+    # Point to rocm locations
+    export ROCM_PATH=/opt/rocm
+    export LD_LIBRARY_PATH="/opt/rocm/lib:/opt/rocm/lib64:$LD_LIBRARY_PATH"
+    export PATH="/opt/rocm/bin:$PATH"
+    
+%files
+  ping_pong_gpu_aware.cpp /ping_pong_gpu_aware.cpp
+
+%post
+
+zypper install -y wget sudo gzip gcc-c++  gcc-fortran tar make autoconf automake binutils cpp glibc-devel m4 makeinfo zlib-devel gcc-info git glibc-info patch pkg-config 
+
+# installing rocm 5.5.1 (see docs: https://rocm.docs.amd.com/en/latest/deploy/linux/installer/install.html)
+## prereqs for rocm
+zypper --non-interactive --no-gpg-checks addrepo https://download.opensuse.org/repositories/devel:/languages:/perl/15.5/devel:languages:perl.repo 
+
+ver=5.5.1
+tee /etc/zypp/repos.d/amdgpu.repo <<EOF
+[amdgpu]
+name=amdgpu
+baseurl=https://repo.radeon.com/amdgpu/$ver/sle/15.4/main/x86_64
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
+EOF
+zypper --non-interactive  --no-gpg-checks ref
+
+tee --append /etc/zypp/repos.d/rocm.repo <<EOF
+[ROCm-$ver]
+name=ROCm$ver
+name=rocm
+baseurl=https://repo.radeon.com/rocm/zyp/$ver/main
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
+EOF
+zypper --non-interactive  --no-gpg-checks ref
+
+zypper --gpg-auto-import-keys install -y rocm-hip-sdk
+
+# Information about the version of MPICH to use
+export MPICH_VERSION=3.4.2
+export MPICH_URL="http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz"
+export MPICH_DIR=/opt/mpich
+
+echo "Installing MPICH..."
+mkdir -p /mpich
+mkdir -p /opt
+# Download
+cd /mpich && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar --no-same-owner -xzf mpich-$MPICH_VERSION.tar.gz
+# Compile and install
+cd /mpich/mpich-$MPICH_VERSION && ./configure  --with-device=ch4:ofi --prefix=$MPICH_DIR && make install
+rm -rf /mpich
+
+# build ping_pong_gpu_aware.cpp
+cd /
+which hipcc
+echo $PATH
+export PATH="$MPICH_DIR/bin:/opt/rocm/bin:$PATH"
+export ROCM_PATH=/opt/rocm
+hipcc -c ping_pong_gpu_aware.cpp -I${MPICH_DIR}/include
+mpicc -o ping_pong_gpu_aware.exe ping_pong_gpu_aware.o  -L${ROCM_PATH}/lib -lamdhip64
+

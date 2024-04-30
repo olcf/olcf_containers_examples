@@ -1,0 +1,26 @@
+Bootstrap: localimage
+From: opensusempich342rocm551.sif
+
+%environment
+    # Point to MPICH binaries, libraries man pages
+    export MPICH_DIR=/opt/mpich
+    export PATH="$MPICH_DIR/bin:$PATH"
+    export LD_LIBRARY_PATH="$MPICH_DIR/lib:$LD_LIBRARY_PATH"
+    export MANPATH=$MPICH_DIR/share/man:$MANPATH
+
+%post
+
+# Set env variables so we can compile our application
+export PATH=$MPICH_DIR/bin:$PATH
+export LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH
+
+echo "Compiling the MPI application..."
+if [[ -d /opt/osu-micro-benchmarks-7.2 ]]
+then
+rm -rf /opt/osu-micro-benchmarks-7.2
+fi
+curl -o osubenchmarks-7.2.tar.gz https://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-7.2.tar.gz && tar -xzf osubenchmarks-7.2.tar.gz --no-same-owner
+cd osu-micro-benchmarks-7.2 && ./configure CC=mpicc CXX=mpicc --enable-rocm --with-rocm=/opt/rocm && make  && rm ../osubenchmarks-7.2.tar.gz
+
+git clone https://github.com/ROCmSoftwarePlatform/rccl-tests.git
+cd rccl-tests && make MPI=1 MPI_HOME=$MPICH_DIR #/opt/cray/pe/mpich/8.1.26/ofi/amd/5.0 HIP_HOME=/opt/rocm-5.5.1/bin/hipcc RCCL_HOME=/opt/rocm-5.5.1/rccl/

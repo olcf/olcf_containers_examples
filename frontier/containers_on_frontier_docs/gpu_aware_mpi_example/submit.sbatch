@@ -6,8 +6,8 @@
 #SBATCH -o logs/%x_%j.out
 #SBATCH -e logs/%x_%j.out
 
-# Loading rocm/5.5.1 since that is what is installed in the container
-module  load rocm/5.5.1
+# Loading rocm/5.7.1 since that is what is installed in the container
+module  load rocm/5.7.1
 # loading cray-mpich and cray-mpich-abi so that the cray-mpich libraries are
 # visible in the container. 
 # The cray-mpich-abi module contains the libmpi.so that the MPI application in
@@ -49,7 +49,7 @@ export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.3,/
 
 # This is required when you have an application that is compiled inside a container that 
 # doesn't have access to the Cray MPICH libraries during the container build process (such as our
-# example opensusempich342rocm551.def). The libmpi_gtl_hsa.so is what provides GPU aware MPI,
+# example opensusempich342rocm571.def). The libmpi_gtl_hsa.so is what provides GPU aware MPI,
 # but the application is not linked to it because it wasn't available in the container when the 
 # application was being built during the container build process. So we
 # need to make sure it is preloaded so that the application uses it.
@@ -60,5 +60,6 @@ export APPTAINERENV_LD_PRELOAD=/opt/cray/pe/mpich/8.1.26/gtl/lib/libmpi_gtl_hsa.
 # The program passes data allocated on GPU memory of increasing size back and forth between 
 # two MPI processes across two nodes.
 # The --rocm flag is required to support AMD GPUs inside the container.
-srun  -N2  --tasks-per-node 1 --gpus-per-task=1 apptainer exec --bind $BINDS --workdir `pwd` --rocm  opensusempich342rocm551.sif /ping_pong_gpu_aware.exe
+srun  -N2  --tasks-per-node 1 --gpus-per-task=1 apptainer exec --bind $BINDS --workdir `pwd` --rocm  opensusempich342rocm571.sif /ping_pong_gpu_aware.exe
+srun  -N2  --tasks-per-node 4 --gpus-per-task=1 apptainer exec --bind $BINDS --workdir `pwd` --rocm  opensusempich342rocm571.sif /vAdd_mpi_ompGPU 
 

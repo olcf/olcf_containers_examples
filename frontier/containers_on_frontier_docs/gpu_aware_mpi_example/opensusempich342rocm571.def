@@ -23,7 +23,7 @@ zypper install -y wget sudo gzip gcc-c++  gcc-fortran tar make autoconf automake
 ## prereqs for rocm
 zypper --non-interactive --no-gpg-checks addrepo https://download.opensuse.org/repositories/devel:/languages:/perl/15.5/devel:languages:perl.repo 
 
-ver=5.5.1
+ver=5.7.1
 tee /etc/zypp/repos.d/amdgpu.repo <<EOF
 [amdgpu]
 name=amdgpu
@@ -45,7 +45,7 @@ gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
 EOF
 zypper --non-interactive  --no-gpg-checks ref
 
-zypper --gpg-auto-import-keys install -y rocm-hip-sdk
+zypper --gpg-auto-import-keys install -y rocm-hip-sdk rocm-openmp-sdk
 
 # Information about the version of MPICH to use
 export MPICH_VERSION=3.4.2
@@ -67,6 +67,8 @@ which hipcc
 echo $PATH
 export PATH="$MPICH_DIR/bin:/opt/rocm/bin:$PATH"
 export ROCM_PATH=/opt/rocm
+
+# ping pong GPU aware MPI
 hipcc -c ping_pong_gpu_aware.cpp -I${MPICH_DIR}/include
 mpicc -o ping_pong_gpu_aware.exe ping_pong_gpu_aware.o  -L${ROCM_PATH}/lib -lamdhip64
 

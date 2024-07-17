@@ -8,12 +8,10 @@
 
 # Loading rocm/5.7.1 since that is what is installed in the container
 module  load rocm/5.7.1
-# loading cray-mpich and cray-mpich-abi so that the cray-mpich libraries are
-# visible in the container. 
+
 # The cray-mpich-abi module contains the libmpi.so that the MPI application in
 # the container (that wasn't compiled with a Cray compiler) will look for.
-module  load cray-mpich/8.1.26
-module  load cray-mpich-abi/8.1.26
+module  load cray-mpich-abi
 
 # This is set so to turn on GPU aware MPI
 export MPICH_GPU_SUPPORT_ENABLED=1
@@ -37,7 +35,7 @@ export BINDS=/usr/share/libdrm,/var/spool/slurmd,/opt/cray,${PWD}
 # that might've been defined as part of the container build, so make sure to explicitly include 
 # any paths from within the container's file tree that you want available to the application 
 # in the container.
-export APPTAINERENV_LD_LIBRARY_PATH="/opt/cray/pe/mpich/8.1.26/ofi/crayclang/14.0/lib-abi-mpich:/opt/cray/pe/mpich/8.1.26/gtl/lib:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64"
+export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_DIR/lib-abi-mpich:$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64"
 
 # APPTAINER_CONTAINLIBS allows you to specify individual libraries from the host that you want
 # visible inside the container and added to the LD_LIBRARY_PATH inside the container.
@@ -45,7 +43,7 @@ export APPTAINERENV_LD_LIBRARY_PATH="/opt/cray/pe/mpich/8.1.26/ofi/crayclang/14.
 # be visible inside the container for the Cray MPICH libraries (that we are making visible 
 # inside the container with the earlier steps) to work as the Cray MPICH libraries are linked
 # linked to them.
-export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.3,/lib64/libtinfo.so.6,/usr/lib64/libnl-3.so.200"
+export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.3,/lib64/libtinfo.so.6,/usr/lib64/libnl-3.so.200,/usr/lib64/libgfortran.so.5,/usr/lib64/libjansson.so.4"
 
 # This is required when you have an application that is compiled inside a container that 
 # doesn't have access to the Cray MPICH libraries during the container build process (such as our
@@ -53,7 +51,7 @@ export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.3,/
 # but the application is not linked to it because it wasn't available in the container when the 
 # application was being built during the container build process. So we
 # need to make sure it is preloaded so that the application uses it.
-export APPTAINERENV_LD_PRELOAD=/opt/cray/pe/mpich/8.1.26/gtl/lib/libmpi_gtl_hsa.so.0:
+export APPTAINERENV_LD_PRELOAD=$CRAY_MPICH_ROOTDIR/gtl/lib/libmpi_gtl_hsa.so.0:
 
 
 # This is executing the ping_ping_gpu_aware.exe in the container with `apptainer exec`. 
@@ -61,5 +59,4 @@ export APPTAINERENV_LD_PRELOAD=/opt/cray/pe/mpich/8.1.26/gtl/lib/libmpi_gtl_hsa.
 # two MPI processes across two nodes.
 # The --rocm flag is required to support AMD GPUs inside the container.
 srun  -N2  --tasks-per-node 1 --gpus-per-task=1 apptainer exec --bind $BINDS --workdir `pwd` --rocm  opensusempich342rocm571.sif /ping_pong_gpu_aware.exe
-srun  -N2  --tasks-per-node 4 --gpus-per-task=1 apptainer exec --bind $BINDS --workdir `pwd` --rocm  opensusempich342rocm571.sif /vAdd_mpi_ompGPU 
 

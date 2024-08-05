@@ -35,7 +35,7 @@ export BINDS=/usr/share/libdrm,/var/spool/slurmd,/opt/cray,${PWD}
 # that might've been defined as part of the container build, so make sure to explicitly include 
 # any paths from within the container's file tree that you want available to the application 
 # in the container.
-export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_DIR/lib-abi-mpich:$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64"
+export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_DIR/lib-abi-mpich:$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64:/opt/cray/xpmem/2.6.2-2.5_2.40__gd067c3f.shasta/lib64"
 
 # APPTAINER_CONTAINLIBS allows you to specify individual libraries from the host that you want
 # visible inside the container and added to the LD_LIBRARY_PATH inside the container.

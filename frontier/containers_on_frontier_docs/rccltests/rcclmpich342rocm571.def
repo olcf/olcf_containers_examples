@@ -23,4 +23,4 @@ curl -o osubenchmarks-7.2.tar.gz https://mvapich.cse.ohio-state.edu/download/mva
 cd osu-micro-benchmarks-7.2 && ./configure CC=mpicc CXX=mpicc --enable-rocm --with-rocm=/opt/rocm && make  && rm ../osubenchmarks-7.2.tar.gz
 
 git clone https://github.com/ROCmSoftwarePlatform/rccl-tests.git
-cd rccl-tests && make MPI=1 MPI_HOME=$MPICH_DIR #/opt/cray/pe/mpich/8.1.26/ofi/amd/5.0 HIP_HOME=/opt/rocm-5.7.1/bin/hipcc RCCL_HOME=/opt/rocm-5.7.1/rccl/
+cd rccl-tests && make MPI=1 MPI_HOME=$MPICH_DIR 

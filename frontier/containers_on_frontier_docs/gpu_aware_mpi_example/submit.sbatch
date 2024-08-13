@@ -11,6 +11,7 @@ module  load rocm/5.7.1
 
 # The cray-mpich-abi module contains the libmpi.so that the MPI application in
 # the container (that wasn't compiled with a Cray compiler) will look for.
+module load craype-network-ofi
 module  load cray-mpich-abi
 
 # This is set so to turn on GPU aware MPI

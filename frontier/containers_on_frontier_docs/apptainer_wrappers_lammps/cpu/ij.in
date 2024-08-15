@@ -1,8 +1,8 @@
 # 3d Lennard-Jones melt
 
-variable        x index 64
-variable        y index 64
-variable        z index 64
+variable        x index 32
+variable        y index 32
+variable        z index 32
 
 variable        xx equal 20*$x
 variable        yy equal 20*$y

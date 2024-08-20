@@ -16,6 +16,8 @@ From: opensuse/leap:15.4
   ping_pong_gpu_aware.cpp /ping_pong_gpu_aware.cpp
 
 %post
+# By default you start at the root '/' location in the container images filesystem
+ls
 
 # Installing some prerequisites
 zypper install -y wget sudo gzip gcc-c++  gcc-fortran tar make autoconf automake binutils cpp glibc-devel m4 makeinfo zlib-devel gcc-info git glibc-info patch pkg-config 

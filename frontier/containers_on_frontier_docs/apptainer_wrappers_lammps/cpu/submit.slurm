@@ -11,7 +11,5 @@ module load PrgEnv-gnu
 module load olcf-container-tools
 module load apptainer-enable-mpi
 
-srun -N 2 -n 112 --ntasks-per-node=56 appexec lammps.sif lmp -in ij.in
-# or
-# srun -N 2 -n 112 --ntasks-per-node=56 apptainer exec lammps.sif lmp -in ij.in
+srun -N 2 -n 112 --ntasks-per-node=56 apptainer exec lammps.sif lmp -in ij.in
 

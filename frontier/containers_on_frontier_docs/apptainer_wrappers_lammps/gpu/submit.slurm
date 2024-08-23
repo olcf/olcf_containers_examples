@@ -12,8 +12,5 @@ module load olcf-container-tools
 module load apptainer-enable-mpi apptainer-enable-gpu
 
 srun -N 2 -n 16 --gpus-per-task=1 --gpu-bind=closest --unbuffered \
-    appexec lammps.sif lmp -k on g 1 -sf kk -pk kokkos gpu/aware on -in ij.in
-# or
-# srun -N 2 -n 16 --gpus-per-task=1 --gpu-bind=closest --unbuffered \
-#	appexec lammps.sif lmp -k on g 1 -sf kk -pk kokkos gpu/aware on -in ij.in
+    apptainer exec lammps.sif lmp -k on g 1 -sf kk -pk kokkos gpu/aware on -in ij.in
 

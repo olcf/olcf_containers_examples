@@ -18,7 +18,7 @@ export BINDS=/usr/share/libdrm,/var/spool/slurmd,/opt/cray,${PWD}
 
 export APPTAINERENV_LD_LIBRARY_PATH=":$CRAY_MPICH_DIR/lib-abi-mpich:$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64:/opt/cray/xpmem/2.6.2-2.5_2.40__gd067c3f.shasta/lib64"
 
-# If you want to use aws-ofi-rccl, then build it with the awsofircclbuild.sh script in this directory, and uncomment the below line.
+# If you want to use aws-ofi-rccl, then build it with the awsofircclbuild.sh script in this directory, and modify the below line to point to the aws-ofi-rccl/lib location
 export APPTAINERENV_LD_LIBRARY_PATH="${PWD}/aws-ofi-rccl/lib:$APPTAINERENV_LD_LIBRARY_PATH"
 
 export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.3,/lib64/libtinfo.so.6,/usr/lib64/libnl-3.so.200,/usr/lib64/libgfortran.so.5,/usr/lib64/libjansson.so.4"

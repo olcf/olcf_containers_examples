@@ -59,7 +59,5 @@ export APPTAINERENV_LD_PRELOAD=$CRAY_MPICH_ROOTDIR/gtl/lib/libmpi_gtl_hsa.so.0:
 # The program passes data allocated on GPU memory of increasing size back and forth between 
 # two MPI processes across two nodes.
 # The --rocm flag is required to support AMD GPUs inside the container.
-srun  -N1  --tasks-per-node 1 --gpus-per-task=1 apptainer exec --workdir `pwd` --rocm  opensusempich342rocm571.sif ./showld.sh
-srun  -N1  --tasks-per-node 1 --gpus-per-task=1 apptainer exec --workdir `pwd` --rocm  opensusempich342rocm571.sif ldd /ping_pong_gpu_aware.exe
 srun  -N2  --tasks-per-node 1 --gpus-per-task=1 apptainer exec --workdir `pwd` --rocm  opensusempich342rocm571.sif /ping_pong_gpu_aware.exe
 

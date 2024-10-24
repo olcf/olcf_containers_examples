@@ -1,0 +1,90 @@
+Bootstrap: docker 
+From: ubuntu:22.04
+
+%files
+./build_olcf_frontier_ROCm_container.sh /
+
+%environment
+export PATH="$PATH:/opt/rocm-6.0.0/bin"
+export MPICH_DIR=/opt/mpich
+export PATH="$MPICH_DIR/bin:$PATH"
+export LD_LIBRARY_PATH="$MPICH_DIR/lib:$LD_LIBRARY_PATH"
+export MANPATH=$MPICH_DIR/share/man:$MANPATH
+# Point to rocm locations
+export ROCM_PATH=/opt/rocm
+export LD_LIBRARY_PATH="/opt/rocm/lib:/opt/rocm/lib64:$LD_LIBRARY_PATH"
+export PATH="/opt/rocm/bin:$PATH"
+
+
+%post
+
+# Installing ROCm 6.0.0
+apt -y update
+apt -y upgrade
+apt clean
+apt -y install apt-utils wget gpg wget 
+mkdir --parents --mode=0755 /etc/apt/keyrings
+wget https://repo.radeon.com/rocm/rocm.gpg.key -O - | gpg --dearmor | tee /etc/apt/keyrings/rocm.gpg > /dev/null
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/6.0/ubuntu jammy main" | tee --append /etc/apt/sources.list.d/amdgpu.list
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/6.0 jammy main" | tee --append /etc/apt/sources.list.d/rocm.list
+echo 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' | tee /etc/apt/preferences.d/rocm-pin-600
+apt -y update
+apt -y install rocm
+apt clean
+tee /etc/ld.so.conf.d/rocm.conf <<EOF
+/opt/rocm/lib
+/opt/rocm/lib64
+EOF
+
+ldconfig
+
+# Installing other libraries needed for QMCPACK
+export DEBIAN_FRONTEND=noninteractive &&\
+    apt-get clean &&\
+    apt-get update -y &&\
+    apt-get upgrade -y apt-utils &&\
+    apt-get install -y gpg wget
+
+wget https://apt.kitware.com/kitware-archive.sh &&\
+    sh kitware-archive.sh
+
+export DEBIAN_FRONTEND=noninteractive &&\
+    apt-get install  gcovr \
+    python3 \
+    cmake \
+    ninja-build \
+    libboost-all-dev \
+    git \
+    libhdf5-serial-dev \
+    hdf5-tools \
+    libfftw3-dev \
+    libopenblas-openmp-dev \
+    libxml2-dev \
+    sudo \
+    curl \
+    rsync \
+    wget \
+    software-properties-common \
+    vim \
+    numdiff \
+    -y
+
+export PATH="$PATH:/opt/rocm-6.0.0/bin"
+
+
+
+# Information about the version of MPICH to use
+export MPICH_VERSION=3.4.2
+export MPICH_URL="http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz"
+export MPICH_DIR=/opt/mpich
+
+echo "Installing MPICH..."
+mkdir -p /tmp/mpich
+mkdir -p /opt
+# Download
+cd /tmp/mpich && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar --no-same-owner -xzf mpich-$MPICH_VERSION.tar.gz
+# Compile and install
+cd /tmp/mpich/mpich-$MPICH_VERSION && CC=amdclang CXX=amdclang++ ./configure  --with-device=ch4:ofi --enable-fortran=no --prefix=$MPICH_DIR && make install
+rm -rf /tmp/mpich
+
+

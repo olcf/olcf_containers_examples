@@ -24,5 +24,5 @@ export MPICH_SMP_SINGLE_COPY_MODE=NONE
 
 srun -N 1 -n 1  --unbuffered  apptainer exec $CONTAINERPATH ldd /qmcpack/config/build_frontier_rocm600_offload_cuda2hip_real/bin/qmcpack  
 cd H2O/
-srun -N 2 -n 16 --gpus-per-task=1 --gpu-bind=closest --unbuffered  apptainer exec $CONTAINERPATH /qmcpack/config/build_frontier_rocm600_offload_cuda2hip_real/bin/qmcpack ./simple-H2O.xml 
+srun -N 2 -n 16 --gpus-per-task=1 --gpu-bind=closest --unbuffered  apptainer exec $CONTAINERPATH /qmcpack/config/install/build_frontier_rocm600_offload_cuda2hip_real/bin/qmcpack ./simple-H2O.xml 
 

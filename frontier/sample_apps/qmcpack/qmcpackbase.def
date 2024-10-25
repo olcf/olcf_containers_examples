@@ -29,11 +29,15 @@ echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.
 echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/6.0 jammy main" | tee --append /etc/apt/sources.list.d/rocm.list
 echo 'Package: *\nPin: release o=repo.radeon.com\nPin-Priority: 600' | tee /etc/apt/preferences.d/rocm-pin-600
 apt -y update
-apt -y install rocm
 apt clean
+
+apt -y install rocm 
+
+# adding the ROCm directories to the library search path
 tee /etc/ld.so.conf.d/rocm.conf <<EOF
 /opt/rocm/lib
 /opt/rocm/lib64
+/opt/rocm/llvm/lib
 EOF
 
 ldconfig
@@ -71,13 +75,13 @@ export DEBIAN_FRONTEND=noninteractive &&\
 
 export PATH="$PATH:/opt/rocm-6.0.0/bin"
 
+ls /opt/rocm-6.0.0/bin
 
 
 # Information about the version of MPICH to use
 export MPICH_VERSION=3.4.2
 export MPICH_URL="http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz"
 export MPICH_DIR=/opt/mpich
-
 echo "Installing MPICH..."
 mkdir -p /tmp/mpich
 mkdir -p /opt
@@ -85,6 +89,6 @@ mkdir -p /opt
 cd /tmp/mpich && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar --no-same-owner -xzf mpich-$MPICH_VERSION.tar.gz
 # Compile and install
 cd /tmp/mpich/mpich-$MPICH_VERSION && CC=amdclang CXX=amdclang++ ./configure  --with-device=ch4:ofi --enable-fortran=no --prefix=$MPICH_DIR && make install
-rm -rf /tmp/mpich
+#rm -rf /tmp/mpich
 
 

@@ -11,4 +11,3 @@ cd qmcpack && git checkout b09d43da4285be95d2717204fbd8ea1b34d43f7d && cd /
 cp /build_olcf_frontier_ROCm_container.sh /qmcpack/config && rm build_olcf_frontier_ROCm_container.sh
 cd qmcpack/config
 ./build_olcf_frontier_ROCm_container.sh /qmcpack /qmcpack/config/install
-

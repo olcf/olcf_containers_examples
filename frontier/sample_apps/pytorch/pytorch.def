@@ -1,5 +1,5 @@
-Bootstrap: localimage
-From: cpe_23.12.sif
+Bootstrap: oras
+From: savannah.ornl.gov/olcf-container-images/frontier/opensuse/clang/cpe:23.12
 
 %post
 
@@ -7,16 +7,7 @@ set -e
 apt install -y bzip2 libtool python3-pip
 
 
-# installing miniforge and creating a conda environment for pytorch
-# everything after this is being done within the scope of the conda environment
-# so make sure the conda environment is activated in your run before you do any
-# actual work
-# wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
-# bash Miniforge3-$(uname)-$(uname -m).sh -b -p /opt/miniforge
-# rm Miniforge3-$(uname)-$(uname -m).sh
-# source /opt/miniforge/bin/activate
 pip install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https://download.pytorch.org/whl/rocm5.7
-
 
 # install mpi4py
 MPICC="mpicc -shared" pip install --no-cache-dir --no-binary=mpi4py mpi4py

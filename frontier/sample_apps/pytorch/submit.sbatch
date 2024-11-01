@@ -29,5 +29,5 @@ mkdir -p ${MIOPEN_USER_DB_PATH}
 
 
 # Run script
-srun -N4 --tasks-per-node=8 -c7 --gpus-per-task=1 --gpu-bind=closest apptainer exec --workdir `pwd` --rocm pytorch.sif ./pyrun.sh
-
+srun -N4 --tasks-per-node=8 -c7 --gpus-per-task=1 --gpu-bind=closest apptainer exec --workdir `pwd` --rocm pytorch.sif \
+    python3 -W ignore -u ./multinode_olcf_mnist_princeton.py --master_addr=$MASTER_ADDR --master_port=3442

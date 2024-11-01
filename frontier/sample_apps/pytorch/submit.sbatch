@@ -7,10 +7,6 @@
 #SBATCH -p batch
 #SBATCH -N 4
 
-# Only necessary if submitting like: sbatch --export=NONE ... (recommended)
-# Do NOT include this line when submitting without --export=NONE
-#unset SLURM_EXPORT_ENV
-
 # Load modules
 module reset 
 module load olcf-container-tools

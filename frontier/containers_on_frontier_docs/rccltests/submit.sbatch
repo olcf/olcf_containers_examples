@@ -12,11 +12,12 @@
 module load rocm/5.7.1
 module  load cray-mpich-abi
 export MPICH_GPU_SUPPORT_ENABLED=1
+export MPICH_SMP_SINGLE_COPY_MODE=NONE
 
 #export NCCL_DEBUG=INFO
 export BINDS=/usr/share/libdrm,/var/spool/slurmd,/opt/cray,${PWD}
 
-export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64:/opt/cray/xpmem/2.6.2-2.5_2.40__gd067c3f.shasta/lib64"
+export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64:/opt/cray/xpmem/2.8.4-1.0_7.3__ga37cbd9.shasta/lib64"
 
 # If you want to use aws-ofi-rccl, then build it with the awsofircclbuild.sh script in this directory, and modify the below line to point to the aws-ofi-rccl/lib location
 export APPTAINERENV_LD_LIBRARY_PATH="${PWD}/aws-ofi-rccl/lib:$APPTAINERENV_LD_LIBRARY_PATH"

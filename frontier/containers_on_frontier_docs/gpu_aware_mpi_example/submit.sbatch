@@ -17,13 +17,13 @@ module  load cray-mpich-abi
 # This is set so to turn on GPU aware MPI
 export MPICH_GPU_SUPPORT_ENABLED=1
 
-# We are setting this as a convenience that we pass to apptainer's --bind flag. 
-# What this does is mount the given directories from the host into the container so that they are visible # within the container. So any application inside the container are able to reach the files in these 
-# locations on the host.
-# We are binding these specific locations as they are required for the Cray MPICH libraries 
-# to be visible inside the container and for MPI to work with good 
-# performance. The application in the container will be able to see and link to the Cray MPICH
-# libraries instead of using the MPICH libraries we install in the container.
+# We are setting this as a convenience that we pass to apptainer's --bind flag. What this does is
+# mount the given directories from the host into the container so that they are visible within the
+# container. So any application inside the container are able to reach the files in these locations
+# on the host. We are binding these specific locations as they are required for the Cray MPICH
+# libraries to be visible inside the container and for MPI to work with good performance. The
+# application in the container will be able to see and link to the Cray MPICH libraries instead of
+# using the MPICH libraries we install in the container.
 export APPTAINER_BINDPATH=/usr/share/libdrm,/var/spool/slurmd,/opt/cray,${PWD}
 
 # What APPTAINERENV_* does is set that environment variable inside the container environment. 
@@ -36,7 +36,7 @@ export APPTAINER_BINDPATH=/usr/share/libdrm,/var/spool/slurmd,/opt/cray,${PWD}
 # that might've been defined as part of the container build, so make sure to explicitly include 
 # any paths from within the container's file tree that you want available to the application 
 # in the container.
-export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64:/opt/cray/xpmem/2.6.2-2.5_2.40__gd067c3f.shasta/lib64"
+export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64:/opt/cray/xpmem/2.8.4-1.0_7.3__ga37cbd9.shasta/lib64"
 
 # APPTAINER_CONTAINLIBS allows you to specify individual libraries from the host that you want
 # visible inside the container and added to the LD_LIBRARY_PATH inside the container.

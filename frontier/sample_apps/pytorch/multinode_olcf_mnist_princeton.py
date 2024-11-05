@@ -38,7 +38,7 @@ class Net(nn.Module):
         return output
 
 
-def train(args, model, device, train_loader, optimizer, epoch):
+def train(args, model, device, train_loader, optimizer, epoch, rank):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
@@ -47,9 +47,11 @@ def train(args, model, device, train_loader, optimizer, epoch):
         loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
+
         if batch_idx % args.log_interval == 0:
             print(
-                "Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(
+                "[GPU {}] Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(
+                    rank,
                     epoch,
                     batch_idx * len(data),
                     len(train_loader.dataset),
@@ -185,10 +187,11 @@ def main():
         [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
     )
     dataset1 = datasets.MNIST("./data", train=True, download=False, transform=transform)
-    dataset2 = datasets.MNIST("./data", train=False, download=False, transform=transform)
+    dataset2 = datasets.MNIST(
+        "./data", train=False, download=False, transform=transform
+    )
 
-    num_gpus_per_node = torch.cuda.device_count()
-    print("num_gpus_per_node = " + str(num_gpus_per_node), flush=True)
+    num_gpus_per_rank = torch.cuda.device_count()
 
     from mpi4py import MPI
 
@@ -196,7 +199,7 @@ def main():
     world_size = comm.Get_size()
     global_rank = rank = comm.Get_rank()
     local_rank = int(rank) % int(
-        num_gpus_per_node
+        num_gpus_per_rank
     )  # local_rank and device are 0 when using 1 GPU per task
     os.environ["WORLD_SIZE"] = str(world_size)
     os.environ["RANK"] = str(global_rank)
@@ -205,8 +208,9 @@ def main():
     os.environ["MASTER_PORT"] = str(args.master_port)
     os.environ["NCCL_SOCKET_IFNAME"] = "hsn0"
     print(
-        f"Hello from rank {global_rank} of {world_size} on {gethostname()} where there are"
-        f" {num_gpus_per_node} allocated GPUs per node.",
+        f"Hello from rank {global_rank} (local rank: {local_rank}) of {world_size}"
+        f"on {gethostname()} where there are",
+        f" {num_gpus_per_rank} allocated GPUs per rank.",
         flush=True,
     )
 
@@ -215,7 +219,6 @@ def main():
         print(f"Group initialized? {dist.is_initialized()}", flush=True)
 
     torch.cuda.set_device(local_rank)
-    print(f"host: {gethostname()}, rank: {rank}, local_rank: {local_rank}")
 
     train_sampler = torch.utils.data.distributed.DistributedSampler(
         dataset1, num_replicas=world_size, rank=rank
@@ -224,7 +227,7 @@ def main():
         dataset1,
         batch_size=args.batch_size,
         sampler=train_sampler,
-        num_workers=int(os.environ["SLURM_CPUS_PER_TASK"]),
+        num_workers=int(os.environ["SLURM_CPUS_PER_TASK"]) - 1,
         pin_memory=True,
     )
     test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
@@ -235,7 +238,8 @@ def main():
 
     scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)
     for epoch in range(1, args.epochs + 1):
-        train(args, ddp_model, local_rank, train_loader, optimizer, epoch)
+        train_sampler.set_epoch(epoch)
+        train(args, ddp_model, local_rank, train_loader, optimizer, epoch, global_rank)
         if rank == 0:
             test(ddp_model, local_rank, test_loader)
         scheduler.step()

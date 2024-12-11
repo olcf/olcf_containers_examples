@@ -1,4 +1,4 @@
-Bootstrap: oras
+Bootstrap: oras # if oras fails try 'docker'
 From: savannah.ornl.gov/olcf-container-images/frontier/ubuntu/gnu/cpe:23.12
 
 %post

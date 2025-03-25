@@ -1,10 +1,12 @@
 Bootstrap: oras
-From: savannah.ornl.gov/olcf-container-images/frontier/opensuse/clang/cpe:23.12
+From: savannah.ornl.gov/olcf-container-images/frontier/ubuntu/clang/cpe:23.12
 
 %post
 
 set -e
+apt-get update
 apt install -y bzip2 libtool python3-pip
+
 
 
 pip install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https://download.pytorch.org/whl/rocm5.7

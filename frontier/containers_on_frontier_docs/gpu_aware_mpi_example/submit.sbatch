@@ -12,7 +12,7 @@ module  load rocm/5.7.1
 
 # The cray-mpich-abi module contains the libmpi.so that the MPI application in
 # the container (that wasn't compiled with a Cray compiler) will look for.
-module  load cray-mpich-abi
+module  load cray-mpich-abi/8.1.28
 
 # This is set so to turn on GPU aware MPI
 export MPICH_GPU_SUPPORT_ENABLED=1
@@ -44,7 +44,7 @@ export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/
 # be visible inside the container for the Cray MPICH libraries (that we are making visible 
 # inside the container with the earlier steps) to work as the Cray MPICH libraries are linked
 # linked to them.
-export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.3,/lib64/libtinfo.so.6,/usr/lib64/libnl-3.so.200,/usr/lib64/libgfortran.so.5,/usr/lib64/libjansson.so.4"
+export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.5,/lib64/libtinfo.so.6,/usr/lib64/libnl-3.so.200,/usr/lib64/libgfortran.so.5,/usr/lib64/libjansson.so.4"
 
 # This is required when you have an application that is compiled inside a container that 
 # doesn't have access to the Cray MPICH libraries during the container build process (such as our
@@ -53,7 +53,6 @@ export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.3,/
 # application was being built during the container build process. So we
 # need to make sure it is preloaded so that the application uses it.
 export APPTAINERENV_LD_PRELOAD=$CRAY_MPICH_ROOTDIR/gtl/lib/libmpi_gtl_hsa.so.0:
-
 
 # This is executing the ping_ping_gpu_aware.exe in the container with `apptainer exec`. 
 # The program passes data allocated on GPU memory of increasing size back and forth between 

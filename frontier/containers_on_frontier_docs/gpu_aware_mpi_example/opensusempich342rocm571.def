@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: opensuse/leap:15.4 
+From: opensuse/leap:15.6
 
 %environment
     # Point to MPICH binaries, libraries man pages
@@ -24,7 +24,7 @@ zypper install -y wget sudo gzip gcc-c++  gcc-fortran tar make autoconf automake
 
 # installing rocm 5.7.1 (see docs: https://rocm.docs.amd.com/en/latest/deploy/linux/installer/install.html)
 ## prereqs for rocm
-zypper --non-interactive --no-gpg-checks addrepo https://download.opensuse.org/repositories/devel:/languages:/perl/15.5/devel:languages:perl.repo 
+zypper --non-interactive --no-gpg-checks addrepo https://download.opensuse.org/repositories/devel:/languages:/perl/15.6/devel:languages:perl.repo 
 
 ver=5.7.1
 tee /etc/zypp/repos.d/amdgpu.repo <<EOF

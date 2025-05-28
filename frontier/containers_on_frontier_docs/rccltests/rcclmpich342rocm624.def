@@ -1,5 +1,5 @@
 Bootstrap: localimage
-From: ../gpu_aware_mpi_example/opensusempich342rocm571.sif
+From: ../gpu_aware_mpi_example/opensusempich342rocm624.sif
 
 %environment
     # Point to MPICH binaries, libraries man pages

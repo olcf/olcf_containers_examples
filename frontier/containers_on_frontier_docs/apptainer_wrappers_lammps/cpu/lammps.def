@@ -1,5 +1,5 @@
-Bootstrap: oras # if oras fails try 'docker'
-From: savannah.ornl.gov/olcf-container-images/frontier/ubuntu/gnu/cpe:23.12
+Bootstrap: docker # if oras fails try 'docker'
+From: savannah.ornl.gov/olcf-container-images/frontier/ubuntu/gnu/cpe:24.11 # this could be the ubuntu, opensuse or rockylinux container
 
 %post
     wget https://github.com/lammps/lammps/archive/refs/tags/stable_2Aug2023_update3.tar.gz

@@ -4,7 +4,7 @@ Example showing how to get download AMD's vLLM container release and run it on F
 
 Download the vLLM container from Dockerhub:
 ```
-apptainer pull --disable-cache vllm_rocm.sif docker://rocm/vllm:rocm6.3.1_vllm_0.8.5_20250513
+apptainer pull --disable-cache vllm_rocm.sif docker://docker.io/rocm/vllm:rocm6.3.1_vllm_0.8.5_20250513
 ```
 
 Download the astrollama model

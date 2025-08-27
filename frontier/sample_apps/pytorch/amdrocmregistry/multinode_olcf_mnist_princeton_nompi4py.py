@@ -170,7 +170,7 @@ def main():
     args = parser.parse_args()
     use_cuda = not args.no_cuda and torch.cuda.is_available()
 
-    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed(args.seed)
 
     train_kwargs = {"batch_size": args.batch_size}
     test_kwargs = {"batch_size": args.test_batch_size}
@@ -193,11 +193,11 @@ def main():
 
     num_gpus_per_rank = torch.cuda.device_count()
 
-    from mpi4py import MPI
-
-    comm = MPI.COMM_WORLD
-    world_size = comm.Get_size()
-    global_rank = rank = comm.Get_rank()
+    print("SLURM_PROCID: ", os.environ["SLURM_PROCID"])
+    print("SLURM_NTASKS: ", os.environ["SLURM_NTASKS"])
+    print(f"ROCR_VISIBLE_DEVICES: {os.environ['ROCR_VISIBLE_DEVICES']}")
+    world_size = int(os.environ["SLURM_NTASKS"])
+    global_rank = rank = int(os.environ["SLURM_PROCID"])
     local_rank = int(rank) % int(
         num_gpus_per_rank
     )  # local_rank and device are 0 when using 1 GPU per task
@@ -208,17 +208,24 @@ def main():
     os.environ["MASTER_PORT"] = str(args.master_port)
     os.environ["NCCL_SOCKET_IFNAME"] = "hsn0"
     print(
+        f"torch.cuda.default_generators: {torch.cuda.default_generators}", flush=True)
+    print(
         f"Hello from rank {global_rank} (local rank: {local_rank}) of {world_size}"
         f"on {gethostname()} where there are",
-        f" {num_gpus_per_rank} allocated GPUs per rank.",
+        f" {num_gpus_per_rank} allocated GPUs per rank, with current device set to {torch.cuda.current_device()}.",
         flush=True,
     )
+    local_device = torch.cuda.current_device()
+    #if torch.cuda.device_count() > 0:
+    #    torch.cuda.set_device(local_rank)
+    #else:
+    #    print("No available GPUs. Check the environment setup.")
+    #    exit(0)
 
     setup(global_rank, world_size)
     if rank == 0:
         print(f"Group initialized? {dist.is_initialized()}", flush=True)
 
-    torch.cuda.set_device(local_rank)
 
     train_sampler = torch.utils.data.distributed.DistributedSampler(
         dataset1, num_replicas=world_size, rank=rank
@@ -232,16 +239,16 @@ def main():
     )
     test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
 
-    model = Net().to(local_rank)
-    ddp_model = DDP(model, device_ids=[local_rank])
+    model = Net().to(local_device)
+    ddp_model = DDP(model, device_ids=[local_device])
     optimizer = optim.Adadelta(ddp_model.parameters(), lr=args.lr)
 
     scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)
     for epoch in range(1, args.epochs + 1):
         train_sampler.set_epoch(epoch)
-        train(args, ddp_model, local_rank, train_loader, optimizer, epoch, global_rank)
+        train(args, ddp_model, local_device, train_loader, optimizer, epoch, global_rank)
         if rank == 0:
-            test(ddp_model, local_rank, test_loader)
+            test(ddp_model, local_device, test_loader)
         scheduler.step()
 
     if args.save_model and rank == 0:

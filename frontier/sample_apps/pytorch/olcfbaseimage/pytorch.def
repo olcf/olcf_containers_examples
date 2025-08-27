@@ -1,0 +1,17 @@
+Bootstrap: docker
+From: savannah.ornl.gov/olcf-container-images/cpe:24.11_gnu_opensuse
+
+%post
+
+set -e
+zypper install -y bzip2 libtool python312-devel python312-pip vim which less gcc13
+
+alternatives --install /usr/bin/python3 python3 $(which python3.12) 99
+alternatives --install /usr/bin/pip3 pip3 $(which pip3.12) 99
+alternatives --install /usr/bin/pip pip $(which pip3.12) 99
+
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.2.4
+
+# install mpi4py
+MPICC="mpicc -shared" pip3 install --no-cache-dir --no-binary=mpi4py mpi4py
+

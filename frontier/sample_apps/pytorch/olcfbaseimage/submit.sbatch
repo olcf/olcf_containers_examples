@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH -A stf007
-#SBATCH -J ddp_test
-#SBATCH -o logs/frontier_apptainer_mltests.%j
-#SBATCH -e logs/frontier_apptainer_mltests.%j
+#SBATCH -J frontier_apptainer_pytorch_test
+#SBATCH -o logs/%x.%j
 #SBATCH -t 00:05:00
 #SBATCH -p batch
-#SBATCH -N 4
+#SBATCH -q debug
+#SBATCH -N 2
 
 # Load modules
 module reset 
@@ -29,5 +29,4 @@ mkdir -p ${MIOPEN_USER_DB_PATH}
 
 
 # Run script
-srun -N4 --tasks-per-node=8 -c7 --gpus-per-task=1 --gpu-bind=closest apptainer exec --workdir `pwd` --rocm pytorch.sif \
-    python3 -W ignore -u ./multinode_olcf_mnist_princeton.py --master_addr=$MASTER_ADDR --master_port=3442
+srun -N2 --label --tasks-per-node=8 -c7 --gpus-per-task=1 --gpu-bind=closest apptainer exec --workdir `pwd` --rocm pytorch.sif ./pyrun.sh

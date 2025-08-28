@@ -3,3 +3,6 @@
 *.swo
 *.exe
 *.o
+frontier/sample_apps/pytorch/data
+*.out
+

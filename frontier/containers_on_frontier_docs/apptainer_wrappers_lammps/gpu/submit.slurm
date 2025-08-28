@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #SBATCH -A  stf007uanofn
-#SBATCH -J lammps_container_cpu
+#SBATCH -J lammps_container_gpu
 #SBATCH -o %j.out
 #SBATCH -N 2
 #SBATCH -t 00:20:00

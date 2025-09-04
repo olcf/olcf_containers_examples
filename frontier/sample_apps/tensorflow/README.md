@@ -8,4 +8,4 @@ apptainer pull tensorflow_latest.sif docker://rocm/tensorflow:latest
 Submit the job with:
 ```
 sbatch submit.sbatch
-
+```

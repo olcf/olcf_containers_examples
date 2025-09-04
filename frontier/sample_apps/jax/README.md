@@ -9,4 +9,4 @@ The MNIST test has already been downloaded and located in the examples folder he
 Proceed to submit the job with:
 ```
 sbatch submit.sbatch
-
+```

@@ -1,0 +1,10 @@
+Bootstrap: localimage
+From: rocky9opensusempich412nvidia2411.sif
+
+%files
+mpiexample.c /app/mpiexample.c
+
+
+%post
+cd /app && mpicc -o mpiexample mpiexample.c
+

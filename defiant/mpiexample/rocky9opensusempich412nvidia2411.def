@@ -1,0 +1,34 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/nvhpc:24.11-devel-cuda12.6-rockylinux9
+
+%environment
+    # Point to MPICH binaries, libraries man pages
+    export MPICH_DIR=/opt/mpich
+    export PATH="$MPICH_DIR/bin:$PATH"
+    export LD_LIBRARY_PATH="$MPICH_DIR/lib:$LD_LIBRARY_PATH"
+    export MANPATH=$MPICH_DIR/share/man:$MANPATH
+
+%post
+
+
+# Information about the version of MPICH to use
+export MPICH_VERSION=4.1.2
+export MPICH_URL="http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz"
+export MPICH_DIR=/opt/mpich
+
+echo "Installing MPICH..."
+rm -rf /tmp/mpich
+mkdir -p /tmp/mpich
+mkdir -p /opt
+# Download
+cd /tmp/mpich && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar --no-same-owner -xzf mpich-$MPICH_VERSION.tar.gz
+# Compile and install
+export FFLAGS=-fallow-argument-mismatch
+
+cd /tmp/mpich/mpich-$MPICH_VERSION 
+#patch -p1 < /my_change.patch
+#./autogen.sh
+./configure  --with-device=ch4:ucx --prefix=$MPICH_DIR && make install
+rm -rf /tmp/mpich
+
+

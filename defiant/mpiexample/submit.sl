@@ -16,6 +16,5 @@ export APPTAINER_CONTAINLIBS="/usr/lib64/libjansson.so.4,/usr/lib64/libdrm.so.2,
 export APPTAINER_BIND=/usr/share/libdrm,/var/spool/slurm,/opt/cray,/opt/mellanox,/etc/libibverbs.d,/usr/lib64/ucx,${PWD}
 
 
-export CONTAINER=../containers/mpiexample.sif
 
-srun --unbuffered -N2 -n4 --tasks-per-node 2 apptainer exec --fakeroot  --workdir `pwd` $CONTAINER /app/mpiexample
+srun -N2 -n4 --tasks-per-node 2 apptainer exec --fakeroot  --workdir `pwd` mpiexample.sif /app/mpiexample

@@ -1,5 +1,5 @@
 Bootstrap: localimage
-From: rocky9opensusempich412nvidia2411.sif
+From: rocky9mpich412nvidia2411.sif
 
 %files
 mpiexample.c /app/mpiexample.c

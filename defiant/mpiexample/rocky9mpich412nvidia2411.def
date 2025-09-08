@@ -17,18 +17,17 @@ export MPICH_URL="http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MP
 export MPICH_DIR=/opt/mpich
 
 echo "Installing MPICH..."
-rm -rf /tmp/mpich
-mkdir -p /tmp/mpich
+mkdir -p /build
 mkdir -p /opt
 # Download
-cd /tmp/mpich && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar --no-same-owner -xzf mpich-$MPICH_VERSION.tar.gz
+cd /build && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar --no-same-owner -xzf mpich-$MPICH_VERSION.tar.gz
 # Compile and install
 export FFLAGS=-fallow-argument-mismatch
 
-cd /tmp/mpich/mpich-$MPICH_VERSION 
+cd /build/mpich-$MPICH_VERSION 
 #patch -p1 < /my_change.patch
 #./autogen.sh
 ./configure  --with-device=ch4:ucx --prefix=$MPICH_DIR && make install
-rm -rf /tmp/mpich
+rm -rf /build
 
 

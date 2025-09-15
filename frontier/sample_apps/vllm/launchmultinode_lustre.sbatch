@@ -14,6 +14,7 @@ start=$SECONDS
 export HEAD_NODE_ADDR=$(hostname)
 echo "HEAD_NODE_ADDR: $HEAD_NODE_ADDR"
 
+export APPTAINERENV_TRITON_CACHE_DIR="/tmp/triton/cache/"  # change write/build location for hip_utils in Triton
 APPTAINER_CMD="apptainer exec --fakeroot --writable-tmpfs ./vllm_rocm.sif "
 export APPTAINER_BINDPATH=/mnt/bb
 

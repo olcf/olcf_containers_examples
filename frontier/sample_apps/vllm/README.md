@@ -16,7 +16,7 @@ git clone https://huggingface.co/AstroMLab/astrollama-2-7b-base_abstract
 
 If you plan on moving the model to the burst buffer first, then tar the model directory
 ```
-tar czf astrollama-2-7b-base_abstract.tar.gz ./astrollama-2-7b-base_abstract/
+tar --use-compress-program="pigz -p 16" -cf astrollama-2-7b-base_abstract.tar.gz ./astrollama-2-7b-base_abstract/
 ```
 
 

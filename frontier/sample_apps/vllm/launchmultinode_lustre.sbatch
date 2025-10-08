@@ -1,8 +1,7 @@
 #!/bin/bash
-#SBATCH -q debug
 #SBATCH -A stf007
 #SBATCH -N 4
-#SBATCH -t 00:15:00
+#SBATCH -t 02:00:00
 #SBATCH -o logs/vllmmult_%j.out
 #SBATCH -C nvme
 

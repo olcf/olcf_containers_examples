@@ -18,7 +18,7 @@ if [ ! "$?" == "0" ]; then
 fi
 echo "show ls"
 ls /mnt/bb/$USER
-srun -N4 --tasks-per-node=1 tar -xzf /mnt/bb/$USER/astrollama-2-7b-base_abstract.tar.gz -C /mnt/bb/$USER
+srun -N4 --tasks-per-node=1 --cpus-per-task=56  tar --use-compress-program="pigz -p 56" -xf /mnt/bb/$USER/astrollama-2-7b-base_abstract.tar.gz -C /mnt/bb/$USER
 echo "show ls"
 ls /mnt/bb/$USER
 sbcast_duration=$(( SECONDS - sbcast_start ))

@@ -3,9 +3,9 @@
 NNODES=$@
 export VLLM_HOST_IP=$(hostname -I | awk '{print $2}')
 echo "VLLM_HOST_IP: $VLLM_HOST_IP"
-ray start --head --port=6379 
+ray start --node-ip-address=$VLLM_HOST_IP --head --port=6379 
 
-sleep 10
+sleep 40
 echo "head node: slurm nnodes - $NNODES"
 
 ray status

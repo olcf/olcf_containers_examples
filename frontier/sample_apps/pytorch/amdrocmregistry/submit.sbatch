@@ -14,7 +14,7 @@ module load rocm/6.4.2
 
 module load olcf-container-tools
 module load apptainer-enable-mpi
-# If you want to use aws-ofi-rccl, then build it with the awsofincclbuild.sh script in this directory, and modify the below line to point to the aws-ofi-rccl/lib location
+# If you want to use aws-ofi-nccl, then build it with the awsofincclbuild.sh script in this directory, and modify the below line to point to the aws-ofi-nccl/lib location
 export APPTAINERENV_LD_LIBRARY_PATH="${PWD}/aws-ofi-nccl/lib:$APPTAINERENV_LD_LIBRARY_PATH"
 ##### see https://docs.olcf.ornl.gov/software/analytics/pytorch_frontier.html#aws-ofi-rccl-plugin
 export NCCL_NET_GDR_LEVEL=3           # Typically improves performance, but remove this setting if you encounter a hang/crash.

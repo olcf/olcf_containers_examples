@@ -9,24 +9,3 @@ pip install /opt/rocm/share/amd_smi
 pip install vllm==0.14.1+rocm700 --extra-index-url https://wheels.vllm.ai/rocm/0.14.1/rocm700
 
 
-## Install dependencies
-#pip install --upgrade numba \
-#    scipy \
-#    huggingface-hub[cli,hf_transfer] \
-#    setuptools_scm
-#pip install "numpy<2"
-#pip install -r requirements/rocm.txt
-#
-## Build vLLM for MI210/MI250/MI300.
-#export PYTORCH_ROCM_ARCH="gfx90a"
-#python3 setup.py develop
-
-# Flash Attention
-# install flash attention
-#cd /opt
-#export FLASH_ATTENTION_TRITON_AMD_ENABLE="TRUE"
-#
-#git clone https://github.com/ROCm/flash-attention.git  
-#cd flash-attention
-#python setup.py install
-

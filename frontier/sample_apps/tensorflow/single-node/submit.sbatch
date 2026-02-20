@@ -5,7 +5,7 @@
 #SBATCH -e logs/frontier_apptainer_mltests.%j
 #SBATCH -t 00:05:00
 #SBATCH -p batch
-#SBATCH -N 2
+#SBATCH -N 1
 
 
 
@@ -17,4 +17,4 @@ module load craype-accel-amd-gfx90a
 set -ex
 
 #Run Script 
-srun -N1 --tasks-per-node=8 -c7 --gpus-per-task=1 --gpu-bind=closest apptainer exec --workdir `pwd` --rocm tensorflow_latest.sif  ./pyrun.sh
+srun -N1 --tasks-per-node=8 -c7 --gpus-per-task=1 --gpu-bind=closest apptainer exec --workdir `pwd` --rocm ../tensorflow_latest.sif  ./pyrun.sh

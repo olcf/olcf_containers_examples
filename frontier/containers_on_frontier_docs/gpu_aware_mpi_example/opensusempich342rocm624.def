@@ -20,7 +20,7 @@ From: opensuse/leap:15.6
 ls
 
 # Installing some prerequisites
-zypper install -y wget sudo gzip gcc-c++  gcc-fortran tar make autoconf automake binutils cpp glibc-devel m4 makeinfo zlib-devel gcc-info git glibc-info patch pkg-config 
+zypper install -y wget sudo gzip gcc-c++ gcc-fortran gcc13-c++ gcc13-fortran tar make autoconf automake binutils cpp glibc-devel m4 makeinfo zlib-devel gcc-info git glibc-info patch pkg-config which
 
 # installing rocm 6.2.4 (see docs: https://rocm.docs.amd.com/en/latest/deploy/linux/installer/install.html)
 ## prereqs for rocm

@@ -1,8 +1,7 @@
 #!/bin/bash
-#SBATCH -q debug
 #SBATCH -A stf007
 #SBATCH -N 4
-#SBATCH -t 00:15:00
+#SBATCH -t 02:00:00
 #SBATCH -o logs/vllmmult_%j.out
 #SBATCH -C nvme
 
@@ -14,6 +13,7 @@ start=$SECONDS
 export HEAD_NODE_ADDR=$(hostname)
 echo "HEAD_NODE_ADDR: $HEAD_NODE_ADDR"
 
+export APPTAINERENV_TRITON_CACHE_DIR="/tmp/triton/cache/"  # change write/build location for hip_utils in Triton
 APPTAINER_CMD="apptainer exec --fakeroot --writable-tmpfs ./vllm_rocm.sif "
 export APPTAINER_BINDPATH=/mnt/bb
 

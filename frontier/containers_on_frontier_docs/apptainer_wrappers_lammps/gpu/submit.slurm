@@ -11,5 +11,6 @@ module load PrgEnv-gnu
 module load olcf-container-tools
 module load apptainer-enable-mpi apptainer-enable-gpu
 
+export APPTAIN=/lustre/orion/stf007/scratch/subil/containerstuff/tmp/apptainer/builddir
 srun -N 2 -n 16 --gpus-per-task=1 --gpu-bind=closest --unbuffered  apptainer exec lammps.sif lmp -k on g 1 -sf kk -pk kokkos gpu/aware on -in ij.in
 

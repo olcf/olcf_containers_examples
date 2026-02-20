@@ -18,7 +18,7 @@ if [ ! "$?" == "0" ]; then
 fi
 echo "show ls"
 ls /mnt/bb/$USER
-srun -N4 --tasks-per-node=1 tar -xzf /mnt/bb/$USER/astrollama-2-7b-base_abstract.tar.gz -C /mnt/bb/$USER
+srun -N4 --tasks-per-node=1 --cpus-per-task=56  tar --use-compress-program="pigz -p 56" -xf /mnt/bb/$USER/astrollama-2-7b-base_abstract.tar.gz -C /mnt/bb/$USER
 echo "show ls"
 ls /mnt/bb/$USER
 sbcast_duration=$(( SECONDS - sbcast_start ))
@@ -28,6 +28,7 @@ start=$SECONDS
 export HEAD_NODE_ADDR=$(hostname)
 echo "HEAD_NODE_ADDR: $HEAD_NODE_ADDR"
 
+export APPTAINERENV_TRITON_CACHE_DIR="/tmp/triton/cache/"  # change write/build location for hip_utils in Triton
 APPTAINER_CMD="apptainer exec --fakeroot --writable-tmpfs ./vllm_rocm.sif "
 export APPTAINER_BINDPATH=/mnt/bb
 

@@ -72,5 +72,5 @@ export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.3,/
 set -ex
 # Run script
 #
-srun -N2 -n2 --gpus=16 --gpu-bind=closest apptainer exec --workdir `pwd` --rocm --bind $BINDS tensorflow_latest.sif  ./pyrun.sh
+srun -N2 -n2 --gpus=16 --gpu-bind=closest apptainer exec --workdir `pwd` --rocm --bind $BINDS ../tensorflow_latest.sif  ./pyrun.sh
 

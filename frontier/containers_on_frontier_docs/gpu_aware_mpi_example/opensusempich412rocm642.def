@@ -20,15 +20,15 @@ From: opensuse/leap:15.6
 ls
 
 # Installing some prerequisites
-zypper install -y wget sudo gzip gcc-c++ gcc-fortran gcc13-c++ gcc13-fortran tar make autoconf automake binutils cpp glibc-devel m4 makeinfo zlib-devel gcc-info git glibc-info patch pkg-config which
+zypper install -y wget sudo gzip gcc-c++ gcc-fortran gcc14-c++ gcc14-fortran tar make autoconf automake binutils cpp glibc-devel m4 makeinfo zlib-devel gcc-info git glibc-info patch pkg-config which
 
-# installing rocm 6.2.4 (see docs: https://rocm.docs.amd.com/en/latest/deploy/linux/installer/install.html)
+# installing rocm 6.4.2 (see docs: https://rocm.docs.amd.com/en/latest/deploy/linux/installer/install.html)
 ## prereqs for rocm
 zypper --non-interactive --no-gpg-checks addrepo https://download.opensuse.org/repositories/devel:/languages:/perl/15.6/devel:languages:perl.repo 
 zypper --non-interactive --no-gpg-checks addrepo https://download.opensuse.org/repositories/Education/15.6/Education.repo
 zypper --non-interactive --no-gpg-checks addrepo https://download.opensuse.org/repositories/science/SLE_15_SP5/science.repo
 
-ver=6.2.4
+ver=6.4.2
 tee /etc/zypp/repos.d/amdgpu.repo <<EOF
 [amdgpu]
 name=amdgpu
@@ -52,10 +52,10 @@ zypper --non-interactive  --no-gpg-checks ref
 
 zypper --gpg-auto-import-keys install -y rocm
 
-# Installing MPICH 3.4a2
+# Installing MPICH 4.1.2
 # Information about the version of MPICH to use
-# see "module show cray-mpich/8.1.31" for the ANL MPICH version that Cray MPICH is based on
-export MPICH_VERSION=3.4a2
+# see "module show cray-mpich/9.0.2" for the ANL MPICH version that Cray MPICH is based on
+export MPICH_VERSION=4.1.2
 export MPICH_URL="http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz"
 export MPICH_DIR=/opt/mpich
 

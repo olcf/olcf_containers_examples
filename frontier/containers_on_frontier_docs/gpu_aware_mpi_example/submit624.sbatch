@@ -7,12 +7,15 @@
 #SBATCH -e logs/%x_%j.out
 
 module reset
+module load cpe/24.11
 # Loading rocm/6.2.4 since that is what is installed in the container
-module  load rocm/6.2.4
+module load rocm/6.2.4
 
 # The cray-mpich-abi module contains the libmpi.so that the MPI application in
 # the container (that wasn't compiled with a Cray compiler) will look for.
-module  load cray-mpich-abi/8.1.31
+module load cray-mpich-abi/8.1.31
+
+module list
 
 # This is set so to turn on GPU aware MPI
 export MPICH_GPU_SUPPORT_ENABLED=1
@@ -58,5 +61,5 @@ export APPTAINERENV_LD_PRELOAD=$CRAY_MPICH_ROOTDIR/gtl/lib/libmpi_gtl_hsa.so.0:
 # The program passes data allocated on GPU memory of increasing size back and forth between 
 # two MPI processes across two nodes.
 # The --rocm flag is required to support AMD GPUs inside the container.
-srun  -N2  --tasks-per-node 1 --gpus-per-task=1 apptainer exec --workdir `pwd` --rocm  opensusempich342rocm624.sif /ping_pong_gpu_aware.exe
+srun -N2 --tasks-per-node 1 --gpus-per-task=1 apptainer --silent exec --workdir `pwd` --rocm opensusempich342rocm624.sif /ping_pong_gpu_aware.exe
 

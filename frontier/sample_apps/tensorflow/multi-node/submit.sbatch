@@ -15,7 +15,7 @@
 
 module load cray-mpich-abi/8.1.31
 module load craype-accel-amd-gfx90a
-module load rocm/5.7.1
+module load rocm/6.4.2
 module load miniforge3
 
 read -ra arr <<< ${ips}
@@ -66,7 +66,7 @@ EOF
 #
 export MPICH_GPU_SUPPORT_ENABLED=1
 export BINDS=/usr/share/libdrm,/var/spool/slurmd,/opt/cray,${PWD}
-export APPTAINERENV_LD_LIBRARY_PATH="/opt/cray/pe/mpich/8.1.31/ofi/crayclang/17.0/lib-abi-mpich:/opt/cray/pe/mpich/8.1.31/gtl/lib:/opt/rocm-5.7.1/lib:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64"
+export APPTAINERENV_LD_LIBRARY_PATH="/opt/cray/pe/mpich/8.1.31/ofi/crayclang/17.0/lib-abi-mpich:/opt/cray/pe/mpich/8.1.31/gtl/lib:/opt/rocm-6.4.2/lib:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64"
 export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.3,/lib64/libtinfo.so.6,/usr/lib64/libnl-3.so.200"
 
 set -ex

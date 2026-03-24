@@ -52,10 +52,12 @@ zypper --non-interactive  --no-gpg-checks ref
 
 zypper --gpg-auto-import-keys install -y rocm
 
-# Installing MPICH 3.4a2
-# Information about the version of MPICH to use
+# Installing MPICH 3.4.2
+# Although cray-mpich/8.1.31 is based on MPICH 3.4a2, we need to use MPICH 3.4.2
+# since that is what provides libmpi.so.12 which matches what is provided by the
+# cray-mpich-abi module
 # see "module show cray-mpich/8.1.31" for the ANL MPICH version that Cray MPICH is based on
-export MPICH_VERSION=3.4a2
+export MPICH_VERSION=3.4.2
 export MPICH_URL="http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz"
 export MPICH_DIR=/opt/mpich
 

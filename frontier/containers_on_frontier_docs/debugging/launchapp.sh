@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# change 0 in the line below to another rank id if you want to debug a different MPI rank
 if [[ $SLURM_PROCID -eq 0 ]]; then
     # this will launch a gdbserver with the MPI rank 0
     #gdbserver 0.0.0.0:2345 /opt/mpi_bcast

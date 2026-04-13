@@ -1,0 +1,24 @@
+bootstrap: docker
+From: savannah.ornl.gov/olcf-container-images/cpe:24.11_gnu_opensuse # this could be the ubuntu, opensuse or rockylinux container
+
+%files
+./mpi_bcast.c /opt/
+
+%post
+cd /opt
+mpicc -o mpi_bcast mpi_bcast.c
+zypper install -y gdb gdbserver
+
+zypper install -y cmake
+wget https://github.com/lammps/lammps/archive/refs/tags/stable_2Aug2023_update3.tar.gz
+tar xzf stable_2Aug2023_update3.tar.gz
+cmake -S lammps-stable_2Aug2023_update3/cmake -B lammps_build -D CMAKE_INSTALL_PREFIX=/opt/lammps -D CMAKE_CXX_COMPILER=hipcc \
+	-D PKG_KOKKOS=yes -D Kokkos_ARCH_HOSTARCH=yes -D Kokkos_ARCH_GPUARCH=yes -D Kokkos_ENABLE_HIP=yes -D CMAKE_BUILD_TYPE=Debug
+cmake --build lammps_build --target install -j8
+rm -r stable_2Aug2023_update3.tar.gz 
+
+%startscript
+./launchapp.sh
+#./helloloop
+#/opt/MPI_bcast/run
+

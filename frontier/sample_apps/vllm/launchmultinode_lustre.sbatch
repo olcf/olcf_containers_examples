@@ -18,10 +18,10 @@ APPTAINER_CMD="apptainer exec --fakeroot --writable-tmpfs ./vllm_rocm.sif "
 export APPTAINER_BINDPATH=/mnt/bb
 
 # starting head node (head node start also starts a worker)
-srun -N1 -n1 -c56 -G8 -w $HEAD_NODE_ADDR $APPTAINER_CMD ./start_head_lustre.sh $SLURM_NNODES > logs/headnodelog 2>&1 &
+srun -N1 -n1 -c56 -G8 -w $HEAD_NODE_ADDR $APPTAINER_CMD ./start_head_lustre.sh $SLURM_NNODES > logs/headnodelog_$SLURM_JOB_ID 2>&1 &
 
 # starting workers on other nodes 
-srun -N3 -n3  --tasks-per-node=1 --cpus-per-task=56 --gpus-per-task=8 -x $HEAD_NODE_ADDR $APPTAINER_CMD ./start_worker.sh $HEAD_NODE_ADDR > logs/workernodeslog 2>&1 &
+srun -N3 -n3  --tasks-per-node=1 --cpus-per-task=56 --gpus-per-task=8 -x $HEAD_NODE_ADDR $APPTAINER_CMD ./start_worker.sh $HEAD_NODE_ADDR > logs/workernodeslog_$SLURM_JOB_ID 2>&1 &
 
 $APPTAINER_CMD python3 ./testprompt_lustre.py
 duration=$(( SECONDS - start ))

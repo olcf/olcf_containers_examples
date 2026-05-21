@@ -1,6 +1,8 @@
 #!/bin/bash
 
+export HIP_VISIBLE_DEVICES=$SLURM_STEP_GPUS
 export VLLM_HOST_IP=$(hostname -I | awk '{print $2}')
 echo "VLLM_HOST_IP: $VLLM_HOST_IP"
 HEAD_NODE_ADDR=$@
+
 ray start --node-ip-address $VLLM_HOST_IP --address=$HEAD_NODE_ADDR:6379 --block

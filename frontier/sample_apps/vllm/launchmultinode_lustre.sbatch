@@ -17,6 +17,9 @@ export APPTAINERENV_TRITON_CACHE_DIR="/tmp/triton/cache/"  # change write/build 
 APPTAINER_CMD="apptainer exec --fakeroot --writable-tmpfs ./vllm_rocm.sif "
 export APPTAINER_BINDPATH=/mnt/bb
 
+# Needed for gpt-oss-120b
+export TIKTOKEN_RS_CACHE_DIR=./vocab_cache
+
 # starting head node (head node start also starts a worker)
 srun -N1 -n1 -c56 -G8 -w $HEAD_NODE_ADDR $APPTAINER_CMD ./start_head_lustre.sh $SLURM_NNODES > logs/headnodelog_$SLURM_JOB_ID 2>&1 &
 

@@ -49,7 +49,7 @@ TIKTOKEN_RS_CACHE_DIR=./vocab_cache apptainer exec vllm_rocm.sif python -c 'from
 Submit the job with
 ```
 # running the model directly from Lustre
-sbatch launchmultinode_lustre.sbatch
+sbatch launchmultinode_lustre.sbatch [gpt-oss-120b | gemma-4-31B-it]
 
 # copying the model to burst buffer first before running
 sbatch launchmultinode_bb.sbatch

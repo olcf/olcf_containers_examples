@@ -22,10 +22,11 @@ completions = []
 
 while True:
     try:
+        model = client.models.list().data[0].id
         start = time.time()
         for test_prompt in test_prompts:
             completion = client.chat.completions.create(
-                model=f"./gemma-4-31B-it",
+                model=f"{model}",
                 messages=[
                     {"role": "user", "content": test_prompt },
                 ],

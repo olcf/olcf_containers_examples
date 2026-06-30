@@ -9,6 +9,15 @@ Build the vLLM container from DockerHub using the included build spec, which inc
 apptainer build vllm_rocm.sif vllm_rocm.def
 ```
 
+> [!WARNING]
+> The use of the AI models below is only approved for the vllm example in this repository. 
+> Any usage of the models outside of these examples is not permitted unless already approved
+> as part of your project. If you need to use any AI models as part of your project that was not
+> previously approved within your project proposal, please reach out to help@olcf.ornl.gov
+
+
+
+
 ## Download the model
 
 ### `gemma-4-31B-it`
@@ -37,13 +46,13 @@ If you plan on moving the model to the burst buffer first, then tar the model di
 tar --use-compress-program="pigz -p 16" -cf gpt-oss-120b.tar.gz ./gpt-oss-120b/
 ```
 
-[!NOTE]
-`gpt-oss-120b` requires an additional step from login nodes.
-Please additionally run the following commands to fetch the vocab file:
-```bash
-mkdir vocab_cache
-TIKTOKEN_RS_CACHE_DIR=./vocab_cache apptainer exec vllm_rocm.sif python -c 'from openai_harmony import load_harmony_encoding; load_harmony_encoding("HarmonyGptOss")'
-```
+> [!NOTE]
+> `gpt-oss-120b` requires an additional step from login nodes.
+> Please additionally run the following commands to fetch the vocab file:
+> ```bash
+> mkdir vocab_cache
+> TIKTOKEN_RS_CACHE_DIR=./vocab_cache apptainer exec vllm_rocm.sif python -c 'from openai_harmony import load_harmony_encoding; load_harmony_encoding("HarmonyGptOss")'
+> ```
 
 ## Run inference
 Submit the job with

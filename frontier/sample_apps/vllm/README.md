@@ -45,6 +45,9 @@ mkdir vocab_cache
 TIKTOKEN_RS_CACHE_DIR=./vocab_cache apptainer exec vllm_rocm.sif python -c 'from openai_harmony import load_harmony_encoding; load_harmony_encoding("HarmonyGptOss")'
 ```
 
+Without this additional step you will run into problems with `gpt-oss-120b` when running vLLM such as an error saying 
+`openai_harmony.HarmonyError: error downloading or loading vocab file: failed to download or load vocab file`
+
 ## Run inference
 Submit the job with
 ```

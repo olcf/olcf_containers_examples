@@ -57,6 +57,11 @@ tar --use-compress-program="pigz -p 16" -cf gpt-oss-120b.tar.gz ./gpt-oss-120b/
 Without this additional step you will run into problems with `gpt-oss-120b` when running vLLM such as an error saying 
 `openai_harmony.HarmonyError: error downloading or loading vocab file: failed to download or load vocab file`
 
+If you plan on running from the burst buffer, then tar the vocab_cache directory as well
+```
+tar --use-compress-program="pigz -p 16" -cf vocab_cache.tar.gz ./vocab_cache/
+```
+
 ## Run inference
 Submit the job with
 ```
@@ -64,5 +69,5 @@ Submit the job with
 sbatch launchmultinode_lustre.sbatch [gpt-oss-120b | gemma-4-31B-it]
 
 # copying the model to burst buffer first before running
-sbatch launchmultinode_bb.sbatch
+sbatch launchmultinode_bb.sbatch [gpt-oss-120b | gemma-4-31B-it]
 ```

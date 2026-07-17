@@ -1,5 +1,5 @@
 bootstrap: docker
-From: savannah.ornl.gov/olcf-container-images/cpe:24.11_gnu_opensuse # this could be the ubuntu, opensuse or rockylinux container
+From: savannah.ornl.gov/olcf-container-images/cpe:25.09_gnu_opensuse # this could be the ubuntu, opensuse or rockylinux container
 
 %files
 ./mpi_bcast.c /opt/
@@ -10,12 +10,18 @@ mpicc -o mpi_bcast mpi_bcast.c
 zypper install -y gdb gdbserver
 
 zypper install -y cmake
-wget https://github.com/lammps/lammps/archive/refs/tags/stable_2Aug2023_update3.tar.gz
-tar xzf stable_2Aug2023_update3.tar.gz
-cmake -S lammps-stable_2Aug2023_update3/cmake -B lammps_build -D CMAKE_INSTALL_PREFIX=/opt/lammps -D CMAKE_CXX_COMPILER=hipcc \
-	-D PKG_KOKKOS=yes -D Kokkos_ARCH_HOSTARCH=yes -D Kokkos_ARCH_GPUARCH=yes -D Kokkos_ENABLE_HIP=yes -D CMAKE_BUILD_TYPE=Debug
+#wget https://github.com/lammps/lammps/archive/refs/tags/stable_2Aug2023_update3.tar.gz
+#tar xzf stable_2Aug2023_update3.tar.gz
+#cmake -S lammps-stable_2Aug2023_update3/cmake -B lammps_build -D CMAKE_INSTALL_PREFIX=/opt/lammps -D CMAKE_CXX_COMPILER=hipcc \
+#	-D PKG_KOKKOS=yes -D Kokkos_ARCH_HOSTARCH=yes -D Kokkos_ARCH_GPUARCH=yes -D Kokkos_ENABLE_HIP=yes -D CMAKE_BUILD_TYPE=Debug
+#cmake --build lammps_build --target install -j8
+#rm -r stable_2Aug2023_update3.tar.gz 
+wget https://github.com/lammps/lammps/releases/download/stable_22Jul2025_update4/lammps-src-22Jul2025_update4.tar.gz
+tar xzf lammps-src-22Jul2025_update4.tar.gz
+cmake -S lammps-22Jul2025/cmake -B lammps_build -D CMAKE_INSTALL_PREFIX=/opt/lammps -D CMAKE_CXX_COMPILER=hipcc  -D PKG_KOKKOS=yes \
+   -D Kokkos_ARCH_HOSTARCH=yes -D Kokkos_ARCH_GPUARCH=yes -D Kokkos_ENABLE_HIP=yes -DKokkos_ARCH_AMD_GFX90A=ON -D CMAKE_BUILD_TYPE=Debug
 cmake --build lammps_build --target install -j8
-rm -r stable_2Aug2023_update3.tar.gz 
+rm -r lammps-src-22Jul2025_update4.tar.gz 
 
 %startscript
 ./launchapp.sh

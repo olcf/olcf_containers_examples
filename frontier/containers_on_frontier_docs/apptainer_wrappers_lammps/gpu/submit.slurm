@@ -7,6 +7,7 @@
 #SBATCH -t 00:20:00
 
 module reset
+module load rocm/6.4.2
 module load olcf-container-tools
 module load apptainer-enable-mpi apptainer-enable-gpu
 

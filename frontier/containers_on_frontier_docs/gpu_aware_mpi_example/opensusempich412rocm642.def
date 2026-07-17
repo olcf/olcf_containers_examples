@@ -21,36 +21,14 @@ ls
 
 # Installing some prerequisites
 zypper install -y wget sudo gzip gcc-c++ gcc-fortran gcc14-c++ gcc14-fortran tar make autoconf automake binutils cpp glibc-devel m4 makeinfo zlib-devel gcc-info git glibc-info patch pkg-config which
-
+zypper --non-interactive update 
 # installing rocm 6.4.2 (see docs: https://rocm.docs.amd.com/en/latest/deploy/linux/installer/install.html)
-## prereqs for rocm
-zypper --non-interactive --no-gpg-checks addrepo https://download.opensuse.org/repositories/devel:/languages:/perl/15.6/devel:languages:perl.repo 
-zypper --non-interactive --no-gpg-checks addrepo https://download.opensuse.org/repositories/Education/15.6/Education.repo
-zypper --non-interactive --no-gpg-checks addrepo https://download.opensuse.org/repositories/science/SLE_15_SP5/science.repo
-
-ver=6.4.2
-tee /etc/zypp/repos.d/amdgpu.repo <<EOF
-[amdgpu]
-name=amdgpu
-baseurl=https://repo.radeon.com/amdgpu/$ver/sle/15.6/main/x86_64
-enabled=1
-gpgcheck=1
-gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
-EOF
-zypper --non-interactive  --no-gpg-checks ref
-
-tee --append /etc/zypp/repos.d/rocm.repo <<EOF
-[ROCm-$ver]
-name=ROCm$ver
-name=rocm
-baseurl=https://repo.radeon.com/rocm/zyp/$ver/main
-enabled=1
-gpgcheck=1
-gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
-EOF
-zypper --non-interactive  --no-gpg-checks ref
-
-zypper --gpg-auto-import-keys install -y rocm
+zypper --non-interactive --no-gpg-checks install https://repo.radeon.com/amdgpu-install/6.4.2/sle/15.6/amdgpu-install-6.4.60402-1.noarch.rpm
+zypper --non-interactive --gpg-auto-import-keys refresh
+zypper --non-interactive addrepo https://download.opensuse.org/repositories/science/SLE_15_SP5/science.repo
+zypper --non-interactive --gpg-auto-import-keys refresh
+zypper --non-interactive install python3-setuptools python3-wheel
+zypper --non-interactive install --force-resolution rocm
 
 # Installing MPICH 4.1.2
 # Information about the version of MPICH to use
@@ -65,7 +43,7 @@ mkdir -p /opt
 # Download
 cd /mpich && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar --no-same-owner -xzf mpich-$MPICH_VERSION.tar.gz
 # Compile and install
-cd /mpich/mpich-$MPICH_VERSION && ./configure  --with-device=ch4:ofi --prefix=$MPICH_DIR && make install
+cd /mpich/mpich-$MPICH_VERSION && ./configure  --with-device=ch4:ofi --prefix=$MPICH_DIR && make -j32 install
 rm -rf /mpich
 
 # build ping_pong_gpu_aware.cpp

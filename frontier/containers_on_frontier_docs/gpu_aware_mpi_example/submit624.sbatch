@@ -39,7 +39,7 @@ export APPTAINER_BINDPATH=/usr/share/libdrm,/var/spool/slurmd,/opt/cray,${PWD}
 # that might've been defined as part of the container build, so make sure to explicitly include 
 # any paths from within the container's file tree that you want available to the application 
 # in the container.
-export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64" #:/opt/cray/xpmem/2.10.6-1.2_gfaa90a94be64/lib64"
+export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/cray/lib64:/opt/rocm/lib:/opt/rocm/lib64:$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH:/opt/cray/pe/lib64" 
 
 # APPTAINER_CONTAINLIBS allows you to specify individual libraries from the host that you want
 # visible inside the container and added to the LD_LIBRARY_PATH inside the container.
@@ -47,7 +47,7 @@ export APPTAINERENV_LD_LIBRARY_PATH="$CRAY_MPICH_ROOTDIR/gtl/lib:/opt/rocm/lib:/
 # be visible inside the container for the Cray MPICH libraries (that we are making visible 
 # inside the container with the earlier steps) to work as the Cray MPICH libraries are linked
 # linked to them.
-export APPTAINER_CONTAINLIBS="/usr/lib64/libcxi.so.1,/usr/lib64/libjson-c.so.5,/lib64/libtinfo.so.6,/usr/lib64/libnl-3.so.200,/usr/lib64/libgfortran.so.5,/usr/lib64/libjansson.so.4,/usr/lib64/libxpmem.so.0"
+export APPTAINER_CONTAINLIBS="/usr/lib64/libjansson.so.4,/usr/lib64/libgfortran.so.5,/usr/lib64/libnl-3.so.200,/lib64/libtinfo.so.6,/usr/lib64/libjson-c.so.5,/usr/lib64/libcxi.so.1,/opt/xpmem/lib64/libxpmem.so.0"
 
 # This is required when you have an application that is compiled inside a container that 
 # doesn't have access to the Cray MPICH libraries during the container build process (such as our

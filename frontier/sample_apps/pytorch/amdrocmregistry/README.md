@@ -26,9 +26,6 @@ Submit the job with:
 sbatch submit.sbatch
 ```
 
-For better performance, you can build the [aws-ofi-nccl](https://github.com/aws/aws-ofi-nccl) library by running the
-`./awsofincclbuild.sh` script. There is an environment variable `APPTAINERENV_LD_LIBRARY_PATH` in
-the `submit.sbatch` that is set so that RCCL will be able to find and load the library during the Pytorch run.
 
 NOTE: This image is built by AMD and does not include MPI or matches any of the software provided by the
 Cray Programming Environment. OLCF has no control of what is included in the images, updates to the

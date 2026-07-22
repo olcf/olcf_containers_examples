@@ -1,5 +1,5 @@
 Bootstrap: localimage
-From: ../gpu_aware_mpi_example/opensusempich342rocm624.sif
+From: ../gpu_aware_mpi_example/opensusempich412rocm642.sif
 
 %environment
     # Point to MPICH binaries, libraries man pages
@@ -14,13 +14,7 @@ From: ../gpu_aware_mpi_example/opensusempich342rocm624.sif
 export PATH=$MPICH_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$MPICH_DIR/lib:$LD_LIBRARY_PATH
 
-echo "Compiling the MPI application..."
-if [[ -d /opt/osu-micro-benchmarks-7.2 ]]
-then
-rm -rf /opt/osu-micro-benchmarks-7.2
-fi
-curl -o osubenchmarks-7.2.tar.gz https://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-7.2.tar.gz && tar -xzf osubenchmarks-7.2.tar.gz --no-same-owner
-cd osu-micro-benchmarks-7.2 && ./configure CC=mpicc CXX=mpicc --enable-rocm --with-rocm=/opt/rocm && make  && rm ../osubenchmarks-7.2.tar.gz
+zypper install -y libhwloc15
 
 git clone https://github.com/ROCmSoftwarePlatform/rccl-tests.git
 cd rccl-tests && make MPI=1 MPI_HOME=$MPICH_DIR 

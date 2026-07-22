@@ -9,20 +9,23 @@
 
 # Load modules
 module reset 
-module load rocm/6.2.4
+
+# if you want to use aws-ofi-rccl, then load the rocm module that matches the rocm version in your
+# container and then load the rccl-net-plugin module
+module load rocm/6.4.2
+module load rccl-net-plugin
+
+
 module load olcf-container-tools
 module load apptainer-enable-mpi
 
 
+# This must be set if you are loading the rccl-net-plugin to make sure that the plugin library is
+# visible in the running container
+export APPTAINERENV_LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$APPTAINERENV_LD_LIBRARY_PATH
 
-## If you want to use aws-ofi-nccl, then build it with the awsofincclbuild.sh script in this directory, and modify the below line to point to the aws-ofi-nccl/lib location
-export APPTAINERENV_LD_LIBRARY_PATH="${PWD}/aws-ofi-nccl/lib:$APPTAINERENV_LD_LIBRARY_PATH"
-export APPTAINER_CONTAINLIBS=/usr/lib64/libhwloc.so.15
-# see https://docs.olcf.ornl.gov/software/analytics/pytorch_frontier.html#aws-ofi-rccl-plugin
-export NCCL_NET_GDR_LEVEL=3           # Typically improves performance, but remove this setting if you encounter a hang/crash.
-export NCCL_CROSS_NIC=1               # On large systems, this NCCL setting has been found to improve performance
-export NCCL_SOCKET_IFNAME=hsn0        # NCCL/RCCL will use the high speed network to coordinate startup.
-# uncomment this only if you need a lot of debug information
+
+
 #export NCCL_DEBUG=info
 
 # Get address of head node

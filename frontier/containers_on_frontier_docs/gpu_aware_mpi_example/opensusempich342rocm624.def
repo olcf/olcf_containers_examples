@@ -67,7 +67,7 @@ mkdir -p /opt
 # Download
 cd /mpich && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar --no-same-owner -xzf mpich-$MPICH_VERSION.tar.gz
 # Compile and install
-cd /mpich/mpich-$MPICH_VERSION && ./configure  --with-device=ch4:ofi --prefix=$MPICH_DIR && make install
+cd /mpich/mpich-$MPICH_VERSION && ./configure  --with-device=ch4:ofi --prefix=$MPICH_DIR && make -j32 install
 rm -rf /mpich
 
 # build ping_pong_gpu_aware.cpp

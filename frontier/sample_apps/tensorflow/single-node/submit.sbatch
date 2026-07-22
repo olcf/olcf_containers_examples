@@ -11,10 +11,9 @@
 
 
 #Loading modules 
-module load rocm
 module load craype-accel-amd-gfx90a
 
 set -ex
 
 #Run Script 
-srun -N1 --tasks-per-node=8 -c7 --gpus-per-task=1 --gpu-bind=closest apptainer exec --workdir `pwd` --rocm ../tensorflow_latest.sif  ./pyrun.sh
+srun --label -N1 --tasks-per-node=1 -c56 --gpus-per-task=1 --gpu-bind=closest apptainer exec --workdir `pwd`  ../tensorflow_latest.sif  ./pyrun.sh

@@ -1,14 +1,14 @@
 Bootstrap: docker 
-From: savannah.ornl.gov/olcf-container-images/cpe:24.11_gnu_opensuse # this could be the ubuntu, opensuse or rockylinux container
+From: savannah.ornl.gov/olcf-container-images/cpe:25.09_gnu_opensuse # this could be the ubuntu, opensuse or rockylinux container
 
 %post
     zypper install -y cmake
-    wget https://github.com/lammps/lammps/archive/refs/tags/stable_2Aug2023_update3.tar.gz
-    tar xzf stable_2Aug2023_update3.tar.gz
-    cmake -S lammps-stable_2Aug2023_update3/cmake -B lammps_build -D CMAKE_INSTALL_PREFIX=/opt/lammps -D CMAKE_CXX_COMPILER=hipcc \
-		-D PKG_KOKKOS=yes -D Kokkos_ARCH_HOSTARCH=yes -D Kokkos_ARCH_GPUARCH=yes -D Kokkos_ENABLE_HIP=yes
+    wget https://github.com/lammps/lammps/releases/download/stable_22Jul2025_update4/lammps-src-22Jul2025_update4.tar.gz
+    tar xzf lammps-src-22Jul2025_update4.tar.gz
+    cmake -S lammps-22Jul2025/cmake -B lammps_build -D CMAKE_INSTALL_PREFIX=/opt/lammps -D CMAKE_CXX_COMPILER=hipcc  -D PKG_KOKKOS=yes \
+       -D Kokkos_ARCH_HOSTARCH=yes -D Kokkos_ARCH_GPUARCH=yes -D Kokkos_ENABLE_HIP=yes -DKokkos_ARCH_AMD_GFX90A=ON
     cmake --build lammps_build --target install -j8
-    rm -r stable_2Aug2023_update3.tar.gz lammps-stable_2Aug2023_update3 lammps_build
+    rm -r lammps-src-22Jul2025_update4.tar.gz lammps-22Jul2025 lammps_build
 
 %environment
     export PATH="/opt/lammps/bin:$PATH"

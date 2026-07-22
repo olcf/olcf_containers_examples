@@ -19,7 +19,6 @@ export no_proxy='localhost,127.0.0.0/8,*.ccs.ornl.gov'
 
 # Load modules
 
-module load rocm/6.4.0
 module load craype-accel-amd-gfx90a
 
 set -ex
@@ -27,4 +26,4 @@ set -ex
 echo "About to Run Apptainer Exec"
 # Run script
 cd examples
-srun -N1 --tasks-per-node=8 -c7 --gpus-per-task=1 --gpu-bind=closest apptainer exec --workdir `pwd` ../jax_latest.sif  ../pyrun.sh
+srun --label -N1 --tasks-per-node=8 -c7 --gpus-per-task=1 --gpu-bind=closest apptainer --silent exec --workdir `pwd` ../jax_latest.sif  ../pyrun.sh

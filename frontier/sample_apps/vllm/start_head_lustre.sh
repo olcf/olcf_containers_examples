@@ -13,4 +13,4 @@ echo "head node: slurm nnodes - $NNODES"
 
 ray status
 
-vllm serve --tensor-parallel-size 8 --pipeline-parallel-size $NNODES --distributed-executor-backend ray "./$RUN_MODEL" --host 0.0.0.0 --port 8000 --gpu-memory-utilization 0.75
+vllm serve --tensor-parallel-size 8 --pipeline-parallel-size $NNODES --distributed-executor-backend ray "$RUN_MODEL" --host 0.0.0.0 --port 8000 --gpu-memory-utilization 0.75

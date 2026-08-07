@@ -1,0 +1,8 @@
+Bootstrap: docker
+From: vllm/vllm-openai-rocm:v0.21.0
+
+%post
+
+set -e
+
+pip3 install "ray[default]"

@@ -1,31 +1,78 @@
-# vLLM example running astrollama-2-7b-base_abstract 
+# vLLM multi-node example running gemma-4-31B-it and/or gpt-oss-120b
 
-Example showing how to get download AMD's vLLM container release and run it on Frontier
+Example showing how to build from vLLM's ROCm container release and run it on Frontier
 
-Download the vLLM container from Dockerhub:
+## Build the image
+
+Build the vLLM container from DockerHub using the included build spec, which includes `ray`:
 ```
-apptainer pull --disable-cache vllm_rocm.sif docker://docker.io/rocm/vllm:rocm6.3.1_vllm_0.8.5_20250513
+apptainer build vllm_rocm.sif vllm_rocm.def
 ```
 
-Download the astrollama model
+> [!WARNING]
+> The use of the AI models below is only approved for the vllm example in this repository. 
+> Any usage of the models outside of these examples is not permitted unless already approved
+> as part of your project. If you need to use any AI models as part of your project that was not
+> previously approved within your project proposal, please reach out to help@olcf.ornl.gov
+> You can modify this example to your own needs if it fits within the scope of your approved
+> project.
+
+
+
+
+## Download the model
+
+### `gemma-4-31B-it`
+Download the gemma-4 model
 ```
 module load git-lfs
 git lfs install
-git clone https://huggingface.co/AstroMLab/astrollama-2-7b-base_abstract
+git clone https://huggingface.co/google/gemma-4-31B-it
 ```
 
 If you plan on moving the model to the burst buffer first, then tar the model directory
 ```
-tar --use-compress-program="pigz -p 16" -cf astrollama-2-7b-base_abstract.tar.gz ./astrollama-2-7b-base_abstract/
+tar --use-compress-program="pigz -p 16" -cf gemma-4-31B-it.tar.gz ./gemma-4-31B-it/
 ```
 
+### `gpt-oss-120b`
+Download the GPT-OSS model
+```
+module load git-lfs
+git lfs install
+git clone https://huggingface.co/openai/gpt-oss-120b
+```
+
+If you plan on moving the model to the burst buffer first, then tar the model directory
+```
+tar --use-compress-program="pigz -p 16" -cf gpt-oss-120b.tar.gz ./gpt-oss-120b/
+```
+
+> [!NOTE]
+> `gpt-oss-120b` requires an additional step from login nodes.
+> Please additionally run the following commands to fetch the vocab file:
+> ```bash
+> mkdir vocab_cache
+> TIKTOKEN_RS_CACHE_DIR=./vocab_cache apptainer exec vllm_rocm.sif python -c 'from openai_harmony import load_harmony_encoding; load_harmony_encoding("HarmonyGptOss")'
+> ```
+
+Without this additional step you will run into problems with `gpt-oss-120b` when running vLLM such as an error saying 
+`openai_harmony.HarmonyError: error downloading or loading vocab file: failed to download or load vocab file`
 
 
+## Run inference
 Submit the job with
 ```
 # running the model directly from Lustre
-sbatch launchmultinode_lustre.sbatch
+sbatch launchmultinode_lustre.sbatch [gpt-oss-120b | gemma-4-31B-it]
 
-# copying the model to burst buffer first before running
-sbatch launchmultinode_bb.sbatch
 ```
+
+> [!NOTE]
+> The launchmultinode_lustre.sbatch loads the module `olcf-container-examples`. This
+> is only necessary to set up the location for the vllm scripts and the Gemma and GPT
+> models used for this specific example. A copy of the scripts being invoked are in 
+> this repository for you to modify. If you are modifying this example for your own
+> needs (provided your LLM use is approved for your project) you can remove the `module use` and
+> `module load` commands, and remove any references to $OLCF_CONTAINER_EXAMPLES_DIR
+

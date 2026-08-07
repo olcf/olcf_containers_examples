@@ -14,6 +14,8 @@ apptainer build vllm_rocm.sif vllm_rocm.def
 > Any usage of the models outside of these examples is not permitted unless already approved
 > as part of your project. If you need to use any AI models as part of your project that was not
 > previously approved within your project proposal, please reach out to help@olcf.ornl.gov
+> You can modify this example to your own needs if it fits within the scope of your approved
+> project.
 
 
 
@@ -57,10 +59,6 @@ tar --use-compress-program="pigz -p 16" -cf gpt-oss-120b.tar.gz ./gpt-oss-120b/
 Without this additional step you will run into problems with `gpt-oss-120b` when running vLLM such as an error saying 
 `openai_harmony.HarmonyError: error downloading or loading vocab file: failed to download or load vocab file`
 
-If you plan on running from the burst buffer, then tar the vocab_cache directory as well
-```
-tar --use-compress-program="pigz -p 16" -cf vocab_cache.tar.gz ./vocab_cache/
-```
 
 ## Run inference
 Submit the job with
@@ -68,6 +66,13 @@ Submit the job with
 # running the model directly from Lustre
 sbatch launchmultinode_lustre.sbatch [gpt-oss-120b | gemma-4-31B-it]
 
-# copying the model to burst buffer first before running
-sbatch launchmultinode_bb.sbatch [gpt-oss-120b | gemma-4-31B-it]
 ```
+
+> [!NOTE]
+> The launchmultinode_lustre.sbatch loads the module `olcf-container-examples`. This
+> is only necessary to set up the location for the vllm scripts and the Gemma and GPT
+> models used for this specific example. A copy of the scripts being invoked are in 
+> this repository for you to modify. If you are modifying this example for your own
+> needs (provided your LLM use is approved for your project) you can remove the `module use` and
+> `module load` commands, and remove any references to $OLCF_CONTAINER_EXAMPLES_DIR
+

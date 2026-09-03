@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/cuda:13.3.1-cudnn-devel-rockylinux9
+
+%environment
+    # Point to MPICH binaries, libraries man pages
+    export MPICH_DIR=/opt/mpich
+    export PATH="$MPICH_DIR/bin:$PATH"
+    export LD_LIBRARY_PATH="$MPICH_DIR/lib:$LD_LIBRARY_PATH"
+    export MANPATH=$MPICH_DIR/share/man:$MANPATH
+    export CUDA_PATH=/usr/local/cuda
+    
+
+%post
+
+echo "Installing required packages..."
+export DEBIAN_FRONTEND=noninteractive
+dnf install -y wget sudo git gzip gcc-c++ libatomic hwloc-devel
+
+
+# Information about the version of MPICH to use
+export MPICH_VERSION=5.0.1
+export MPICH_URL="http://www.mpich.org/static/downloads/$MPICH_VERSION/mpich-$MPICH_VERSION.tar.gz"
+export MPICH_DIR=/opt/mpich
+
+echo "Installing MPICH..."
+mkdir -p /mpich
+mkdir -p /opt
+# Download
+cd /mpich && wget -O mpich-$MPICH_VERSION.tar.gz $MPICH_URL && tar --no-same-owner -xzf mpich-$MPICH_VERSION.tar.gz
+# Compile and install
+cd /mpich/mpich-$MPICH_VERSION && ./configure --disable-fortran --with-device=ch4:ucx --prefix=$MPICH_DIR && make -j32 install
+rm -rf /mpich
+
